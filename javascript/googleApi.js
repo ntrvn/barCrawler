@@ -262,12 +262,13 @@ function initMap() {
                 radius: '1000',
                 type: ['bar']
               };
-              service.nearbySearch(request, callback);
+              service.textSearch(request, callback);
             }
         );
         return false;
     }
   function callback(results, status) {
+    console.log(results);
     if (status == google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
         var place = results[i];
@@ -292,12 +293,14 @@ function initMap() {
       icon: imageIcon
     });
     google.maps.event.addListener(marker, 'click', function() {
-      infowindow.setContent(place.name);
+      var content = place.name + "<br>" + place.formatted_address + "<br>" + '<img src="' + place.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200}) +'" alt="">';
+      infowindow.setContent(content);
       infowindow.open(map, this);
     });
   }
   function addRow(place) {
     var div = document.createElement('div');
+
     var button = document.createElement('button');
     var buttonText = document.createTextNode("add");
     button.appendChild(buttonText);
@@ -306,30 +309,66 @@ function initMap() {
     button.classList.add("my-2");
     button.classList.add("my-sm-0");
     button.classList.add("addButton");
+
     var text = document.createElement('h5');
     var node = document.createTextNode(place.name);
     text.appendChild(node);
-    text.style.color = "#366e51"
+    text.style.color = "#366e51";
+
+    var address = document.createElement('h3');
+    var addressText = place.formatted_address + "\n";
+    var addressNode = document.createTextNode(addressText);
+    address.appendChild(addressNode);
+    address.style.color = "#366e51";
+    address.style.fontSize = "15px";
+
+    var rating = document.createElement('h3');
+    var ratingText = "rating: " + place.rating + "/5.0" + "\n";
+    var ratingNode = document.createTextNode(ratingText);
+    address.appendChild(ratingNode);
+    rating.style.color = "#366e51";
+    rating.style.fontSize = "15px";
+
+    var open = document.createElement('h3');
+    var openText = "";
+    if (place.opening_hours.open_now == false) {
+        openText = "Closed" + "\n";
+        open.style.color = "Red";
+    } else {
+        openText = "Open" + "\n";
+        open.style.color = "#366e51";
+    }
+    var openNode = document.createTextNode(openText);
+    open.appendChild(openNode);
+    open.style.fontSize = "15px";
+
     var img = document.createElement("img");
     img.src = place.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200});
+    img.style.marginBottom = "5px";
+
     div.appendChild(button);
     div.appendChild(text);
     div.appendChild(img);
+    div.appendChild(address);
+    div.appendChild(rating);
+    div.appendChild(open);
+
     div.style.paddingBottom = "20px";
     div.style.paddingTop = "20px";
     div.style.border = "1px solid #366f52";
+
     document.getElementById('searchResults').appendChild(div);
     var test = document.querySelectorAll('.addButton');
-    console.log("test");
+    //console.log("test");
     for (var i = 0; i < test.length; ++i) {
         test[i].onclick = function() {
             var parent = this.parentNode;
             var name = parent.firstChild.nextSibling.innerText;
             var imgURL = parent.lastChild.src;
             var bar = {name: name, img: imgURL};
-            console.log(name);
+            //console.log(name);
             var jsonObject = JSON.stringify(bar);
-            console.log(jsonObject);
+            //console.log(jsonObject);
             sendBar(jsonObject);
         }
     }
