@@ -1,9 +1,11 @@
 function initMap() {
+    // create new map
     var map = new google.maps.Map(
         document.querySelector("#map-container"),
         {center: {lat: 34.05,lng: -118.24},
         zoom : 15,
         zoomControl: true,
+        // style the map
         styles:
         [{
                 "featureType": "administrative",
@@ -268,17 +270,17 @@ function initMap() {
         return false;
     }
   function callback(results, status) {
-    console.log(results);
     if (status == google.maps.places.PlacesServiceStatus.OK) {
+      var directionsService = new google.maps.DirectionsService;
       for (var i = 0; i < results.length; i++) {
         var place = results[i];
         createMarker(results[i]);
       }
     }
   }
+  // create marker for all nearby bars
   function createMarker(place) {
     addRow(place);
-    //console.log(place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}));
     var placeLoc = place.geometry.location;
     var imageIcon = {
       url: "http://www.iconarchive.com/download/i97927/flat-icons.com/flat/Beer.ico",
@@ -293,14 +295,16 @@ function initMap() {
       icon: imageIcon
     });
     google.maps.event.addListener(marker, 'click', function() {
+      storethis(place.geometry.location);
       var content = place.name + "<br>" + place.formatted_address + "<br>" + '<img src="' + place.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200}) +'" alt="">';
       infowindow.setContent(content);
       infowindow.open(map, this);
     });
+
   }
+  // display all the results
   function addRow(place) {
     var div = document.createElement('div');
-
     var button = document.createElement('button');
     var buttonText = document.createTextNode("add");
     button.appendChild(buttonText);
@@ -342,6 +346,10 @@ function initMap() {
     open.appendChild(openNode);
     open.style.fontSize = "15px";
 
+    var tests = document.createElement('h3');
+    var testsNode = document.createTextNode(JSON.stringify(place.geometry.location));
+    tests.appendChild(testsNode);
+
     var img = document.createElement("img");
     img.src = place.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200});
     img.style.marginBottom = "5px";
@@ -352,6 +360,7 @@ function initMap() {
     div.appendChild(address);
     div.appendChild(rating);
     div.appendChild(open);
+    div.appendChild(tests);
 
     div.style.paddingBottom = "20px";
     div.style.paddingTop = "20px";
@@ -359,19 +368,10 @@ function initMap() {
 
     document.getElementById('searchResults').appendChild(div);
     var test = document.querySelectorAll('.addButton');
-    //console.log("test");
+    var array = [];
     for (var i = 0; i < test.length; ++i) {
         test[i].onclick = function() {
-            var parent = this.parentNode;
-            var name = parent.firstChild.nextSibling.innerText;
-            var imgURL = parent.firstChild.nextSibling.nextSibling.src;
-            var addressSend = parent.firstChild.nextSibling.nextSibling.nextSibling.innerText;
-            var ratingSend = parent.firstChild.nextSibling.nextSibling.nextSibling.nextSibling.innerText;
-            var openSend = parent.lastChild.innerText;
-            var urlSend = '../config/sendData.php?name='+encodeURI(name)+'&img='+imgURL+'&address='+encodeURI(addressSend)+'&rating='+encodeURI(ratingSend)+'&open='+openSend;
-            ajaxGet(urlSend, function(results) {
-                console.log(results);
-            });
+            alert("Please Sign in, Or register to saved your favorite bar");
         }
     }
   }
@@ -381,21 +381,4 @@ function initMap() {
         myNode.removeChild(myNode.firstChild);
     }
   }
-  function ajaxGet(endpointUrl, returnFunction){
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', endpointUrl, true);
-    xhr.onreadystatechange = function(){
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            if (xhr.status == 200) {
-                // Convert JSON string into JS objects
-                returnFunction(xhr.responseText);
-            } else {
-                alert('AJAX Error.');
-                console.log(xhr.status);
-            }
-        }
-    }
-    xhr.send();
-  };
-
 }

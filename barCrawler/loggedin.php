@@ -32,6 +32,9 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
+            <a class="nav-link" href="user.php" style="color: #366e51; font-size: 15px; font-weight: 500; padding-top: 10px;">My Account<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
             <a class="nav-link" href="../login/logout.php" style="color: #366e51; font-size: 15px; font-weight: 500; padding-top: 10px;">Sign Out<span class="sr-only">(current)</span></a>
           </li>
         </ul>
@@ -58,6 +61,6 @@
     <script src="../javascript/googleApi.js"></script>
     <script>
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBPWM21XoXtodJFdDLALgxieohvqyIH7E&libraries=places&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGp8W5MTnpDSwNfUG0Ps_cWvK2ZUDG5aI&libraries=places&callback=initMap"></script>
 </body>
 </html>
