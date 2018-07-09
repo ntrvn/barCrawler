@@ -61,6 +61,6 @@
     <script src="../javascript/googleApi.js"></script>
     <script>
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGp8W5MTnpDSwNfUG0Ps_cWvK2ZUDG5aI&libraries=places&callback=initMap"></script>
+    <script src="YOUR GOOGLE API KEY"></script>
 </body>
 </html>
